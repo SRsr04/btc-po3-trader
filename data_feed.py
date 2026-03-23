@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 data_feed.py — Live OHLCV data fetching from Binance
 Fetches M15 and M1 candles, filters to Kyiv session window.
@@ -71,6 +72,32 @@ def filter_session(df):
     start_h, start_m = map(int, SESSION_START.split(":"))
     end_h,   end_m   = map(int, SESSION_END.split(":"))
 
+=======
+import ccxt
+import pandas as pd
+import pytz
+from config import (
+    SYMBOL, TIMEFRAME_HTF, TIMEFRAME_LTF,
+    TIMEZONE, SESSION_START, SESSION_END,
+    HTF_CANDLES_LIMIT, LTF_CANDLES_LIMIT,
+)
+
+def get_exchange():
+    return ccxt.binance({"enableRateLimit": True})
+
+def fetch_candles(exchange, symbol, timeframe, limit):
+    raw = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
+    df = pd.DataFrame(raw, columns=["timestamp","open","high","low","close","volume"])
+    kyiv_tz = pytz.timezone(TIMEZONE)
+    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms", utc=True)
+    df["timestamp"] = df["timestamp"].dt.tz_convert(kyiv_tz)
+    df.set_index("timestamp", inplace=True)
+    return df
+
+def filter_session(df):
+    start_h, start_m = map(int, SESSION_START.split(":"))
+    end_h,   end_m   = map(int, SESSION_END.split(":"))
+>>>>>>> 2c7f187 (feat: module 2 - data feed)
     mask = (
         (df.index.hour > start_h) |
         ((df.index.hour == start_h) & (df.index.minute >= start_m))
@@ -78,6 +105,7 @@ def filter_session(df):
         (df.index.hour < end_h) |
         ((df.index.hour == end_h) & (df.index.minute <= end_m))
     )
+<<<<<<< HEAD
 
     return df[mask].copy()
 
@@ -92,12 +120,18 @@ def get_htf_data(session_only=True):
     session_only=True  → only candles inside 08:00–12:00 Kyiv window
     session_only=False → all candles (used by backtester)
     """
+=======
+    return df[mask].copy()
+
+def get_htf_data(session_only=True):
+>>>>>>> 2c7f187 (feat: module 2 - data feed)
     exchange = get_exchange()
     df = fetch_candles(exchange, SYMBOL, TIMEFRAME_HTF, HTF_CANDLES_LIMIT)
     if session_only:
         df = filter_session(df)
     return df
 
+<<<<<<< HEAD
 
 def get_ltf_data(session_only=True):
     """
@@ -105,12 +139,16 @@ def get_ltf_data(session_only=True):
     session_only=True  → only candles inside 08:00–12:00 Kyiv window
     session_only=False → all candles (used by backtester)
     """
+=======
+def get_ltf_data(session_only=True):
+>>>>>>> 2c7f187 (feat: module 2 - data feed)
     exchange = get_exchange()
     df = fetch_candles(exchange, SYMBOL, TIMEFRAME_LTF, LTF_CANDLES_LIMIT)
     if session_only:
         df = filter_session(df)
     return df
 
+<<<<<<< HEAD
 
 # ─────────────────────────────────────────────
 # QUICK TEST — run this file directly to verify
@@ -126,3 +164,14 @@ if __name__ == "__main__":
     ltf = get_ltf_data(session_only=True)
     print(f"M1 candles in session: {len(ltf)}")
     print(ltf.tail(3))
+=======
+if __name__ == "__main__":
+    print("Fetching M15 candles...")
+    htf = get_htf_data(session_only=False)
+    print(f"M15 candles: {len(htf)}")
+    print(htf.tail(3))
+    print("\nFetching M1 candles...")
+    ltf = get_ltf_data(session_only=False)
+    print(f"M1 candles: {len(ltf)}")
+    print(ltf.tail(3))
+>>>>>>> 2c7f187 (feat: module 2 - data feed)

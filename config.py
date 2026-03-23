@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 config.py — Central configuration for the PO3 Trading Strategy
 All parameters live here. Change values only in this file.
@@ -43,3 +44,25 @@ HTF_CANDLES_LIMIT = 100            # How many M15 candles to fetch per cycle
 LTF_CANDLES_LIMIT = 60             # How many M1 candles to fetch per cycle
 LIVE_POLL_SECONDS = 60             # How often to re-fetch data in live mode (seconds)
  
+=======
+SYMBOL         = "BTC/USDT"
+TIMEFRAME_HTF  = "15m"
+TIMEFRAME_LTF  = "1m"
+
+TIMEZONE          = "Europe/Kyiv"
+SESSION_START     = "08:00"
+SESSION_END       = "12:00"
+
+ACCUMULATION_MIN_CANDLES = 6
+ACCUMULATION_MAX_CANDLES = 8
+
+FRACTAL_WINDOW        = 2
+CLEAN_REJECTION_RATIO = 0.60
+
+FVG_MIN_SIZE_PCT = 0.001
+ENTRY_VARIANT    = "BOTH"
+
+HTF_CANDLES_LIMIT = 100
+LTF_CANDLES_LIMIT = 60
+LIVE_POLL_SECONDS = 60
+>>>>>>> 2c7f187 (feat: module 2 - data feed)
