@@ -5,3 +5,5 @@ pytz>=2024.1
 matplotlib>=3.8.0
 jupyter>=1.0.0
 notebook>=7.0.0
+
+>>>>>>> 19b0e8e5d34ee4b47b51114cf05ebdee7be2628f
